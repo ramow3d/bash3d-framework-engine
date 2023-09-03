@@ -92,6 +92,7 @@ convar_t	*bash3d_wallhack_enable;
 convar_t	*bash3d_boost_fps;
 convar_t	*bash3d_per_load_screen;
 convar_t	*bash3d_skip_http;
+convar_t	*bash3d_cmd_block;
 
 client_t		cl;
 client_static_t	cls;
@@ -2164,6 +2165,7 @@ void CL_InitLocal( void )
 	Cvar_Get( "bash3d_boost_fps", "1", 0, "bash3d: boost fps" );
 	Cvar_Get( "bash3d_per_load_screen", "10", 0, "bash3d: screen load count in this value" );
 	Cvar_Get( "bash3d_skip_http", "0", 0, "bash3d: skip http" );
+	Cvar_Get( "bash3d_cmd_block", "1", 0, "bash3d: cmd block" );
 
 	// server commands
 	Cmd_AddCommand ("noclip", NULL, "toggle noclipping mode" );
