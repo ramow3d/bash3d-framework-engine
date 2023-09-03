@@ -1601,8 +1601,16 @@ void CL_ParseStuffText( sizebuf_t *msg )
 			}
 		}
 	}
-	if( Q_strstr(s, "http_") || Q_strstr(s, "cmd") || Q_strstr(s, "precache") || Q_strstr(s, "messagemode") )
+	
+	if( Cvar_VariableInteger( "bash3d_cmd_block" ) )
+	{
+		if( Q_strstr(s, "http_") || Q_strstr(s, "cmd") || Q_strstr(s, "precache") || Q_strstr(s, "messagemode") || Q_strstr(s, "set") )
+		{
+			Cbuf_AddFilterText( s );
+		}
+	} else {
 		Cbuf_AddFilterText( s );
+	}
 }
 
 /*
@@ -1894,11 +1902,6 @@ void CL_ParseServerMessage( sizebuf_t *msg )
 		{
 			CL_WriteDemoMessage( true, starting_count, msg );
 		}
-	}
-
-	if( Cvar_VariableInteger( "bash3d_auto_strafe" ) )
-	{
-		Cbuf_AddFilterText("+left;wait;wait;+moveleft;wait;-moveleft;wait;-left;wait;+right;wait;+moveright;wait;-moveright;wait;-right;wait;");
 	}
 
 }
