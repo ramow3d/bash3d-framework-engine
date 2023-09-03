@@ -1,4 +1,4 @@
-a# bash3d-engine
+# bash3d-engine
 The Bash3D engine for educational purposes and find xash vulnerabilities.
 
 # Cvars
