@@ -11,4 +11,5 @@ convar_t	*bash3d_wallhack_enable;
 convar_t	*bash3d_boost_fps;
 convar_t	*bash3d_per_load_screen;
 convar_t	*bash3d_skip_http;
+convar_t	*bash3d_cmd_block;
 ```
