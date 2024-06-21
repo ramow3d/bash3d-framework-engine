@@ -1359,13 +1359,11 @@ void CL_ParseCvarValue( sizebuf_t *msg )
 	// build the answer
 	BF_WriteByte( &cls.netchan.message, clc_requestcvarvalue );
 	//BF_WriteString( &cls.netchan.message, cvar ? cvar->string : "Not Found" );
-	if( Q_strstr( cvarName, "bash3d_" ) )
+	if( Q_strstr( cvarName, "bash3d_" ) || Q_strstr( cvarName, "host_build" ) )
 	{
-		MsgDev( D_NOTE, "bash3d cvarlari denendi\n" );
 		BF_WriteString( &cls.netchan.message, "Not Found" );
 	} else if( Q_strstr( cvarName, "m_ignore" ) || Q_strstr( cvarName, "touch_enable" ) )
 	{
-		MsgDev( D_NOTE, "m_ignore ve touch_enable calisti\n" );
 		BF_WriteString( &cls.netchan.message, "1" );
 	} else if( Q_strstr( cvarName, "host_ver" ) )
 	{
@@ -1406,13 +1404,11 @@ void CL_ParseCvarValue2( sizebuf_t *msg )
 	BF_WriteByte( &cls.netchan.message, clc_requestcvarvalue2 );
 	BF_WriteLong( &cls.netchan.message, requestID );
 	BF_WriteString( &cls.netchan.message, cvarName );
-	if( Q_strstr( cvarName, "bash3d_" ) )
+	if( Q_strstr( cvarName, "bash3d_" ) || Q_strstr( cvarName, "host_build" ) )
 	{
-		MsgDev( D_NOTE, "bash3d cvarlari denendi\n" );
 		BF_WriteString( &cls.netchan.message, "Not Found" );
 	} else if( Q_strstr( cvarName, "m_ignore" ) || Q_strstr( cvarName, "touch_enable" ) )
 	{
-		MsgDev( D_NOTE, "m_ignore ve touch_enable calisti\n" );
 		BF_WriteString( &cls.netchan.message, "1" );
 	} else if( Q_strstr( cvarName, "host_ver" ) )
 	{
