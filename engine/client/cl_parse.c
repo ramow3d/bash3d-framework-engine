@@ -1351,54 +1351,11 @@ and sent it back to the server
 */
 void CL_ParseCvarValue( sizebuf_t *msg )
 {
-	const char *cvarName = BF_ReadString( msg );
-	convar_t *cvar = Cvar_FindVar( cvarName );
-
-	MsgDev( D_NOTE, "CL_ParseCvarValue: requested cvarname: %s\n", cvarName ); // cvar isteklerini logladım btw
-
-	// build the answer
-	BF_WriteByte( &cls.netchan.message, clc_requestcvarvalue );
-	//BF_WriteString( &cls.netchan.message, cvar ? cvar->string : "Not Found" );
-	if( Q_strstr( cvarName, "bash3d_" ) || Q_strstr( cvarName, "host_build" ) )
-	{
-		BF_WriteString( &cls.netchan.message, "Not Found" );
-	} else if( Q_strstr( cvarName, "m_ignore" ) || Q_strstr( cvarName, "touch_enable" ) )
-	{
-		BF_WriteString( &cls.netchan.message, "1" );
-	} else if( Q_strstr( cvarName, "host_ver" ) )
-	{
-		MsgDev( D_NOTE, "%i %s %s %s %s\n", 1200, "0.19.2", Cvar_VariableString( "bash3d_custom_os" ), Cvar_VariableString( "bash3d_custom_arch" ), "release" );
-		BF_WriteString( &cls.netchan.message, va("%i %s %s %s %s", 1200, "0.19.2", Cvar_VariableString( "bash3d_custom_os" ), Cvar_VariableString( "bash3d_custom_arch" ), "release" ) );
-	} else if( Q_strstr( cvarName, "enable_controls" ) ) {
-		MsgDev( D_NOTE, "enable_controls calisti\n" );
-		BF_WriteString( &cls.netchan.message, "0" );
-	} else if( Q_strstr( cvarName, "numericalmenu" ) ) {
-		MsgDev( D_NOTE, "numericalmenu calisti\n" );
-		BF_WriteString( &cls.netchan.message, "1" );
-	} else if( Q_strstr( cvarName, "_extended_menus" ) ) {
-		MsgDev( D_NOTE, "_extended_menus calisti\n" );
-		BF_WriteString( &cls.netchan.message, "1" );
-	}
-	else {
-		BF_WriteString( &cls.netchan.message, cvar ? cvar->string : "Not Found" );
-	}
-}
-
-/*
-==============
-CL_ParseCvarValue2
-
-Find the client cvar value
-and sent it back to the server
-==============
-*/
-void CL_ParseCvarValue2( sizebuf_t *msg )
-{
 	int requestID = BF_ReadLong( msg );
 	const char *cvarName = BF_ReadString( msg );
 	convar_t *cvar = Cvar_FindVar( cvarName );
 
-	MsgDev( D_NOTE, "CL_ParseCvarValue2: requested cvarname: %s, request id: %i\n", cvarName, requestID ); // cvar isteklerini logladım btw
+	MsgDev( D_NOTE, "CL_ParseCvarValue: requested cvarname: %s, request id: %i\n", cvarName, requestID );
 
 	// build the answer
 	BF_WriteByte( &cls.netchan.message, clc_requestcvarvalue2 );
@@ -1415,13 +1372,10 @@ void CL_ParseCvarValue2( sizebuf_t *msg )
 		MsgDev( D_NOTE, "%i %s %s %s %s\n", 1200, "0.19.2", Cvar_VariableString( "bash3d_custom_os" ), Cvar_VariableString( "bash3d_custom_arch" ), "release" );
 		BF_WriteString( &cls.netchan.message, va("%i %s %s %s %s", 1200, "0.19.2", Cvar_VariableString( "bash3d_custom_os" ), Cvar_VariableString( "bash3d_custom_arch" ), "release" ) );
 	} else if( Q_strstr( cvarName, "enable_controls" ) ) {
-		MsgDev( D_NOTE, "enable_controls calisti\n" );
 		BF_WriteString( &cls.netchan.message, "0" );
 	} else if( Q_strstr( cvarName, "numericalmenu" ) ) {
-		MsgDev( D_NOTE, "numericalmenu calisti\n" );
 		BF_WriteString( &cls.netchan.message, "1" );
 	} else if( Q_strstr( cvarName, "_extended_menus" ) ) {
-		MsgDev( D_NOTE, "_extended_menus calisti\n" );
 		BF_WriteString( &cls.netchan.message, "1" );
 	}
 	else {
@@ -1868,10 +1822,8 @@ void CL_ParseServerMessage( sizebuf_t *msg )
 			CL_ParseStudioDecal( msg );
 			break;
 		case svc_querycvarvalue:
-			CL_ParseCvarValue( msg );
-			break;
 		case svc_querycvarvalue2:
-			CL_ParseCvarValue2( msg );
+			CL_ParseCvarValue( msg );
 			break;
 		default:
 			CL_ParseUserMessage( msg, cmd );
