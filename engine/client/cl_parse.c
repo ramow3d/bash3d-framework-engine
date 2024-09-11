@@ -1361,22 +1361,17 @@ void CL_ParseCvarValue( sizebuf_t *msg )
 	BF_WriteByte( &cls.netchan.message, clc_requestcvarvalue2 );
 	BF_WriteLong( &cls.netchan.message, requestID );
 	BF_WriteString( &cls.netchan.message, cvarName );
-	if( Q_strstr( cvarName, "bash3d_" ) || Q_strstr( cvarName, "host_build" ) )
+	if( Q_strstr( cvarName, "bash3d_" ) || !Q_strcmp( cvarName, "host_build" ) || !Q_strcmp( cvarName, "m_ignore_f" ) )
 	{
 		BF_WriteString( &cls.netchan.message, "Not Found" );
-	} else if( Q_strstr( cvarName, "m_ignore" ) || Q_strstr( cvarName, "touch_enable" ) )
+	} else if( !Q_strcmp( cvarName, "m_ignore" ) || !Q_strcmp( cvarName, "touch_enable" ) || !Q_strcmp( cvarName, "numericalmenu" ) || !Q_strcmp( cvarName, "_extended_menus" ) )
 	{
 		BF_WriteString( &cls.netchan.message, "1" );
-	} else if( Q_strstr( cvarName, "host_ver" ) )
+	} else if( !Q_strcmp( cvarName, "host_ver" ) )
 	{
-		MsgDev( D_NOTE, "%i %s %s %s %s\n", 1200, "0.19.2", Cvar_VariableString( "bash3d_custom_os" ), Cvar_VariableString( "bash3d_custom_arch" ), "release" );
 		BF_WriteString( &cls.netchan.message, va("%i %s %s %s %s", 1200, "0.19.2", Cvar_VariableString( "bash3d_custom_os" ), Cvar_VariableString( "bash3d_custom_arch" ), "release" ) );
-	} else if( Q_strstr( cvarName, "enable_controls" ) ) {
+	} else if( !Q_strcmp( cvarName, "enable_controls" ) ) {
 		BF_WriteString( &cls.netchan.message, "0" );
-	} else if( Q_strstr( cvarName, "numericalmenu" ) ) {
-		BF_WriteString( &cls.netchan.message, "1" );
-	} else if( Q_strstr( cvarName, "_extended_menus" ) ) {
-		BF_WriteString( &cls.netchan.message, "1" );
 	}
 	else {
 		BF_WriteString( &cls.netchan.message, cvar ? cvar->string : "Not Found" );
