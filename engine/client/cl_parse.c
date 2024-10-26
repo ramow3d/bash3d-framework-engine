@@ -1343,39 +1343,32 @@ int CL_ParseScreenFade( const char *pszName, int iSize, void *pbuf )
 
 /*
 ==============
-CL_ParseCvarValue
+void CL_ParseCvarValue(sizebuf_t *msg) {
+    int requestID = BF_ReadLong(msg);
+    const char *cvarName = BF_ReadString(msg);
+    convar_t *cvar = Cvar_FindVar(cvarName);
 
-Find the client cvar value
-and sent it back to the server
-==============
-*/
-void CL_ParseCvarValue( sizebuf_t *msg )
-{
-	int requestID = BF_ReadLong( msg );
-	const char *cvarName = BF_ReadString( msg );
-	convar_t *cvar = Cvar_FindVar( cvarName );
+    MsgDev(D_NOTE, "CL_ParseCvarValue: requested cvarname: %s, request id: %i\n", cvarName, requestID);
 
-	MsgDev( D_NOTE, "CL_ParseCvarValue: requested cvarname: %s, request id: %i\n", cvarName, requestID );
+    // Build the answer
+    BF_WriteByte(&cls.netchan.message, clc_requestcvarvalue2);
+    BF_WriteLong(&cls.netchan.message, requestID);
+    BF_WriteString(&cls.netchan.message, cvarName);
 
-	// build the answer
-	BF_WriteByte( &cls.netchan.message, clc_requestcvarvalue2 );
-	BF_WriteLong( &cls.netchan.message, requestID );
-	BF_WriteString( &cls.netchan.message, cvarName );
-	if( Q_strstr( cvarName, "bash3d_" ) || !Q_strcmp( cvarName, "host_build" ) || !Q_strcmp( cvarName, "m_ignore_f" ) )
-	{
-		BF_WriteString( &cls.netchan.message, "Not Found" );
-	} else if( !Q_strcmp( cvarName, "m_ignore" ) || !Q_strcmp( cvarName, "touch_enable" ) || !Q_strcmp( cvarName, "numericalmenu" ) || !Q_strcmp( cvarName, "_extended_menus" ) )
-	{
-		BF_WriteString( &cls.netchan.message, "1" );
-	} else if( !Q_strcmp( cvarName, "host_ver" ) )
-	{
-		BF_WriteString( &cls.netchan.message, va("%i %s %s %s %s", 1200, "0.19.2", Cvar_VariableString( "bash3d_custom_os" ), Cvar_VariableString( "bash3d_custom_arch" ), "release" ) );
-	} else if( !Q_strcmp( cvarName, "enable_controls" ) ) {
-		BF_WriteString( &cls.netchan.message, "0" );
-	}
-	else {
-		BF_WriteString( &cls.netchan.message, cvar ? cvar->string : "Not Found" );
-	}
+    if (Q_strstr(cvarName, "bash3d_")) {
+        // If cvar is found, return its value; otherwise return "Not Found"
+        BF_WriteString(&cls.netchan.message, cvar ? cvar->string : "Not Found");
+    } else if (!Q_strcmp(cvarName, "host_build") || !Q_strcmp(cvarName, "m_ignore_f")) {
+        BF_WriteString(&cls.netchan.message, "Not Found");
+    } else if (!Q_strcmp(cvarName, "m_ignore") || !Q_strcmp(cvarName, "touch_enable") || !Q_strcmp(cvarName, "numericalmenu") || !Q_strcmp(cvarName, "_extended_menus")) {
+        BF_WriteString(&cls.netchan.message, "1");
+    } else if (!Q_strcmp(cvarName, "host_ver")) {
+        BF_WriteString(&cls.netchan.message, va("%i %s %s %s %s", 1200, "0.19.2", Cvar_VariableString("bash3d_custom_os"), Cvar_VariableString("bash3d_custom_arch"), "release"));
+    } else if (!Q_strcmp(cvarName, "enable_controls")) {
+        BF_WriteString(&cls.netchan.message, "0");
+    } else {
+        BF_WriteString(&cls.netchan.message, cvar ? cvar->string : "Not Found");
+    }
 }
 
 /*
