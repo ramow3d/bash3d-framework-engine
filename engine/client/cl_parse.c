@@ -1340,10 +1340,15 @@ int CL_ParseScreenFade( const char *pszName, int iSize, void *pbuf )
 
 	return 1;
 }
-
 /*
 ==============
-void CL_ParseCvarValue(sizebuf_t *msg) {
+CL_ParseCvarValue
+Find the client cvar value
+and sent it back to the server
+==============
+*/
+void CL_ParseCvarValue(sizebuf_t *msg) 
+{
     int requestID = BF_ReadLong(msg);
     const char *cvarName = BF_ReadString(msg);
     convar_t *cvar = Cvar_FindVar(cvarName);
